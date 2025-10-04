@@ -1,27 +1,35 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
 const { Sequelize } = require('sequelize');
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+// Inisialisasi Express
+const app = express();
 
-const sequelize = new Sequelize('railway', 'root', 'ECFHgEekSnNOVMbDBlGeuCORfrMHQQpp', {
-    host: 'shinkansen.proxy.rlwy.net',
-    port: 38721,
-    dialect: 'mysql'
-});
+// Sequelize (pakai ENV, bukan hardcode)
+const sequelize = new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASS,
+    {
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: 'mysql'
+    }
+);
 
+// Cek koneksi database
 (async () => {
     try {
         await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+        console.log('✅ Database connected successfully');
     } catch (error) {
-        console.error('Unable to connect to the database:', error);
+        console.error('❌ Database connection failed:', error);
     }
-})()
+})();
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+// Route utama
+app.get('/', (req, res) => {
+    res.send('Hello World from Vercel + Express + Sequelize!');
+});
+
+// Export handler (tanpa listen)
+module.exports = app;
