@@ -1,6 +1,9 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
 
+// 👇 Tambahkan baris ini supaya Vercel tidak tree-shake mysql2
+require('mysql2');
+
 // Inisialisasi Express
 const app = express();
 
